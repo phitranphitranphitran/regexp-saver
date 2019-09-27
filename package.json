@@ -10,13 +10,17 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.replaceInSelection"
+		"onCommand:extension.replaceInSelection",
+		"onCommand:extension.replaceInFile"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [{
 			"command": "extension.replaceInSelection",
 			"title": "RegExp Saver: Replace in Selection"
+		}, {
+			"command": "extension.replaceInFile",
+			"title": "RegExp Saver: Replace in File"
 		}],
 		"configuration": {
 			"title": "RegExp Saver",
