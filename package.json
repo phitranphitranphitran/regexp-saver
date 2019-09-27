@@ -17,7 +17,35 @@
 		"commands": [{
 			"command": "extension.replaceInSelection",
 			"title": "RegExp Saver: Replace in Selection"
-		}]
+		}],
+		"configuration": {
+			"title": "RegExp Saver",
+			"properties": {
+				"regExpSaver.saved": {
+					"type": "array",
+					"default": [],
+					"description": "Saved regular expressions to re-use",
+					"items": {
+						"type": "object",
+						"properties": {
+							"name": {
+								"type": "string"
+							},
+							"regExp": {
+								"type": "string"
+							},
+							"replacePattern": {
+								"type": "string"
+							},
+							"regExpFlags": {
+								"type": "string",
+								"default": "g"
+							}
+						}
+					}
+				}
+			}
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "yarn run compile",
