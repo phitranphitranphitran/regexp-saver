@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import { stringify } from 'querystring';
 
 export function activate(context: vscode.ExtensionContext) {
 	const commands = { replaceInSelection, replaceInFile };
@@ -23,8 +22,7 @@ async function replaceInSelection() {
 		return;
 	}
 	const text = editor.document.getText(selection);
-	const regExp = new RegExp(pickedItem.regExp, pickedItem.flags || 'g');
-	const newText = text.replace(regExp, pickedItem.replacePattern);
+	const newText = getNewText(pickedItem, text);
 	editor.edit(builder => builder.replace(selection, newText));
 }
 
@@ -38,8 +36,7 @@ async function replaceInFile() {
 		return;
 	}
 	const text = editor.document.getText();
-	const regExp = new RegExp(pickedItem.regExp, pickedItem.flags || 'g');
-	const newText = text.replace(regExp, pickedItem.replacePattern);
+	const newText = getNewText(pickedItem, text);
 	const textRange = new vscode.Range(
 		editor.document.positionAt(0), 
 		editor.document.positionAt(text.length - 1)
@@ -47,7 +44,7 @@ async function replaceInFile() {
 	editor.edit(builder => builder.replace(textRange, newText));
 }
 
-async function pickSavedItem({ validateReplace = false } = {}) {
+async function pickSavedItem({ validateReplace = false } = {}): Promise<SavedItem | undefined> {
 	const configuration = vscode.workspace.getConfiguration();
 	const savedItems: any[] | undefined = configuration.get('regExpSaver.saved');
 	if (!savedItems || !savedItems.length) {
@@ -72,16 +69,14 @@ async function pickSavedItem({ validateReplace = false } = {}) {
 	return pickedItem;
 }
 
-// interface SavedItem {
-// 	name?: string;
-// 	regExp?: string;
-// 	replacePattern?: string;
-// 	flags?: string;
-// }
+function getNewText(pickedItem: SavedItem, text: string): string {
+	const regExp = new RegExp(pickedItem.regExp, pickedItem.flags || 'g');
+	return text.replace(regExp, pickedItem.replacePattern);
+}
 
-// interface ValidatedSavedItem {
-// 	name: string;
-// 	regExp: string;
-// 	replacePattern?: string;
-// 	flags?: string;
-// }
+interface SavedItem {
+	name: string;
+	regExp: string;
+	replacePattern: string;
+	flags?: string;
+}
