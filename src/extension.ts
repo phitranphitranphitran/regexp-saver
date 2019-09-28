@@ -1,11 +1,10 @@
 import * as vscode from 'vscode';
 
 export function activate(context: vscode.ExtensionContext) {
-	const commands = { replaceInSelection, replaceInFile };
-	for (const [name, fn] of Object.entries(commands)) {
-		const disposable = vscode.commands.registerCommand(`extension.${name}`, fn);
-		context.subscriptions.push(disposable);
-	}
+	context.subscriptions.concat([
+		vscode.commands.registerCommand('extension.replaceInSelection', replaceInSelection),
+		vscode.commands.registerCommand('extension.replaceInFile', replaceInFile),
+	]);
 }
 
 async function replaceInSelection() {
@@ -17,7 +16,7 @@ async function replaceInSelection() {
 	if (selection.isEmpty) {
 		return;
 	}
-	const pickedItem = await pickSavedItem({ validateReplace: true });
+	const pickedItem = await pickSavedItem();
 	if (!pickedItem) {
 		return;
 	}
@@ -31,20 +30,20 @@ async function replaceInFile() {
 	if (!editor) {
 		return;
 	}
-	const pickedItem = await pickSavedItem({ validateReplace: true });
+	const pickedItem = await pickSavedItem();
 	if (!pickedItem) {
 		return;
 	}
 	const text = editor.document.getText();
 	const newText = getNewText(pickedItem, text);
-	const textRange = new vscode.Range(
+	const documentTextRange = new vscode.Range(
 		editor.document.positionAt(0), 
 		editor.document.positionAt(text.length - 1)
 	);
-	editor.edit(builder => builder.replace(textRange, newText));
+	editor.edit(builder => builder.replace(documentTextRange, newText));
 }
 
-async function pickSavedItem({ validateReplace = false } = {}): Promise<SavedItem | undefined> {
+async function pickSavedItem(): Promise<SavedItem | undefined> {
 	const configuration = vscode.workspace.getConfiguration();
 	const savedItems: any[] | undefined = configuration.get('regExpSaver.saved');
 	if (!savedItems || !savedItems.length) {
@@ -62,7 +61,7 @@ async function pickSavedItem({ validateReplace = false } = {}): Promise<SavedIte
 		vscode.window.showErrorMessage('Selected RegExp has no regExp specified');
 		return;
 	}
-	if (validateReplace && !pickedItem.replacePattern) {
+	if (!pickedItem.replacePattern) {
 		vscode.window.showErrorMessage('Selected RegExp has no replacePattern specified');
 		return;
 	}
