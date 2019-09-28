@@ -2,47 +2,42 @@ import * as vscode from 'vscode';
 
 export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.concat([
-		vscode.commands.registerCommand('extension.replaceInSelection', replaceInSelection),
-		vscode.commands.registerCommand('extension.replaceInFile', replaceInFile),
+		vscode.commands.registerTextEditorCommand('extension.replaceInSelection', replaceInSelection),
+		vscode.commands.registerTextEditorCommand('extension.replaceInFile', replaceInFile),
 	]);
 }
 
-async function replaceInSelection() {
-	const editor = vscode.window.activeTextEditor;
-	if (!editor) {
-		return;
-	}
-	const selection = editor.selection;
+async function replaceInSelection(textEditor: vscode.TextEditor) {
+	const selection = textEditor.selection;
 	if (selection.isEmpty) {
+		vscode.window.showErrorMessage('No selection made');
 		return;
 	}
 	const pickedItem = await pickSavedItem();
 	if (!pickedItem) {
 		return;
 	}
-	const text = editor.document.getText(selection);
-	const newText = getNewText(pickedItem, text);
-	editor.edit(builder => builder.replace(selection, newText));
+	const currentText = textEditor.document.getText(selection);
+	replace({ textEditor, pickedItem, currentText, range: selection });
 }
 
-async function replaceInFile() {
-	const editor = vscode.window.activeTextEditor;
-	if (!editor) {
-		return;
-	}
+async function replaceInFile(textEditor: vscode.TextEditor) {
 	const pickedItem = await pickSavedItem();
 	if (!pickedItem) {
 		return;
 	}
-	const text = editor.document.getText();
-	const newText = getNewText(pickedItem, text);
+	const currentText = textEditor.document.getText();
 	const documentTextRange = new vscode.Range(
-		editor.document.positionAt(0), 
-		editor.document.positionAt(text.length - 1)
+		textEditor.document.positionAt(0), 
+		textEditor.document.positionAt(currentText.length - 1)
 	);
-	editor.edit(builder => builder.replace(documentTextRange, newText));
+	replace({ textEditor, pickedItem, currentText, range: documentTextRange });
 }
 
+/**
+ * Show a QuickPick menu for the user to select a saved RegExp to use.
+ * If none is selected, return undefined.
+ */
 async function pickSavedItem(): Promise<SavedItem | undefined> {
 	const configuration = vscode.workspace.getConfiguration();
 	const savedItems: any[] | undefined = configuration.get('regExpSaver.saved');
@@ -68,9 +63,15 @@ async function pickSavedItem(): Promise<SavedItem | undefined> {
 	return pickedItem;
 }
 
-function getNewText(pickedItem: SavedItem, text: string): string {
+function replace({ textEditor, pickedItem, currentText, range }: {
+	textEditor: vscode.TextEditor, 
+	pickedItem: SavedItem, 
+	currentText: string, 
+	range: vscode.Range,
+}) {
 	const regExp = new RegExp(pickedItem.regExp, pickedItem.flags || 'g');
-	return text.replace(regExp, pickedItem.replacePattern);
+	const newText = currentText.replace(regExp, pickedItem.replacePattern);
+	textEditor.edit(builder => builder.replace(range, newText));
 }
 
 interface SavedItem {
