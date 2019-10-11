@@ -36,10 +36,12 @@
 								"type": "string"
 							},
 							"regExp": {
-								"type": "string"
+								"type": "string",
+								"description": "IMPORTANT: backslashes need to be doubled up. Example: \\w needs to be \\\\w"
 							},
 							"replacePattern": {
-								"type": "string"
+								"type": "string",
+								"description": "$1, $2, $3..."
 							},
 							"regExpFlags": {
 								"type": "string",
