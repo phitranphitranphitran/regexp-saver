@@ -55,7 +55,8 @@
 							},
 							"regExpFlags": {
 								"type": "string",
-								"default": "g"
+								"default": "g",
+								"description": "Flags such as g, i, m, s. Default is just g."
 							}
 						}
 					}
