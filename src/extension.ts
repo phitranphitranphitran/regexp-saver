@@ -45,8 +45,12 @@ async function pickSavedItem(): Promise<SavedItem | undefined> {
 		vscode.window.showErrorMessage('No RegExps were saved yet');
 		return;
 	}
+	const quickPickItems = savedItems.map(item => ({ 
+		label: item.name || '(No name)', 
+		...item
+	}));
 	const pickedItem = await vscode.window.showQuickPick(
-		savedItems.map(item => ({ label: item.name || '(No name)', ...item })), 
+		quickPickItems,
 		{ placeHolder: 'Select a saved RegExp' }
 	);
 	if (!pickedItem) {
