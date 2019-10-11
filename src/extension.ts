@@ -19,7 +19,7 @@ async function replaceInSelection(textEditor: vscode.TextEditor) {
 		return;
 	}
 	const currentText = textEditor.document.getText(selection);
-	replace({ textEditor, pickedItem, currentText, range: selection });
+	return replace({ textEditor, pickedItem, currentText, range: selection });
 }
 
 async function replaceInFile(textEditor: vscode.TextEditor) {
@@ -30,9 +30,9 @@ async function replaceInFile(textEditor: vscode.TextEditor) {
 	const currentText = textEditor.document.getText();
 	const documentTextRange = new vscode.Range(
 		textEditor.document.positionAt(0), 
-		textEditor.document.positionAt(currentText.length - 1)
+		textEditor.document.positionAt(currentText.length)
 	);
-	replace({ textEditor, pickedItem, currentText, range: documentTextRange });
+	return replace({ textEditor, pickedItem, currentText, range: documentTextRange });
 }
 
 async function saveNew() {
@@ -61,7 +61,7 @@ async function saveNew() {
 	const configuration = vscode.workspace.getConfiguration();
 	const savedItems: any[] | undefined = configuration.get('regExpSaver.saved');
 	const newItems = (savedItems || []).concat(newItem);
-	configuration.update('regExpSaver.saved', newItems, true);
+	await configuration.update('regExpSaver.saved', newItems, true);
 	vscode.window.showInformationMessage('RegExp saved');
 }
 
@@ -98,7 +98,7 @@ function replace({ textEditor, pickedItem, currentText, range }: {
 }) {
 	const regExp = new RegExp(pickedItem.regExp, pickedItem.flags || 'g');
 	const newText = currentText.replace(regExp, pickedItem.replacePattern || '');
-	textEditor.edit(builder => builder.replace(range, newText));
+	return textEditor.edit(builder => builder.replace(range, newText));
 }
 
 interface SavedItem {
