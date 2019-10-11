@@ -2,9 +2,9 @@ import * as vscode from 'vscode';
 
 export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.concat([
-		vscode.commands.registerTextEditorCommand('extension.replaceInSelection', replaceInSelection),
-		vscode.commands.registerTextEditorCommand('extension.replaceInFile', replaceInFile),
-		vscode.commands.registerCommand('extension.saveNew', saveNew),
+		vscode.commands.registerTextEditorCommand('regExpSaver.replaceInSelection', replaceInSelection),
+		vscode.commands.registerTextEditorCommand('regExpSaver.replaceInFile', replaceInFile),
+		vscode.commands.registerCommand('regExpSaver.saveNew', saveNew),
 	]);
 }
 

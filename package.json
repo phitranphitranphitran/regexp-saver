@@ -10,26 +10,26 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.replaceInSelection",
-		"onCommand:extension.replaceInFile",
-		"onCommand:extension.saveNew"
+		"onCommand:regExpSaver.replaceInSelection",
+		"onCommand:regExpSaver.replaceInFile",
+		"onCommand:regExpSaver.saveNew"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [{
-			"command": "extension.replaceInSelection",
+			"command": "regExpSaver.replaceInSelection",
 			"title": "RegExp Saver: Replace in Selection"
 		}, {
-			"command": "extension.replaceInFile",
+			"command": "regExpSaver.replaceInFile",
 			"title": "RegExp Saver: Replace in File"
 		}, {
-			"command": "extension.saveNew",
+			"command": "regExpSaver.saveNew",
 			"title": "RegExp Saver: Save New RegExp"
 		}],
 		"menus": {
 			"editor/context": [{
 				"when": "editorHasSelection",
-				"command": "extension.replaceInSelection"
+				"command": "regExpSaver.replaceInSelection"
 			}]
 		},
 		"configuration": {
