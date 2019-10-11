@@ -48,7 +48,7 @@
 					"items": {
 						"type": "object",
 						"properties": {
-							"name": {
+							"label": {
 								"type": "string"
 							},
 							"regExp": {

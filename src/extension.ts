@@ -50,14 +50,14 @@ async function saveNew() {
 	if (replacePattern === undefined) {
 		return;
 	}
-	const name = await vscode.window.showInputBox({ 
-		prompt: 'Enter a name for your new RegExp',
+	const label = await vscode.window.showInputBox({ 
+		prompt: 'Enter a label for your new RegExp',
 		ignoreFocusOut: true
 	});
-	if (!name) {
+	if (!label) {
 		return;
 	}
-	const newItem = { name, regExp, replacePattern };
+	const newItem = { label, regExp, replacePattern };
 	const configuration = vscode.workspace.getConfiguration();
 	const savedItems: any[] | undefined = configuration.get('regExpSaver.saved');
 	const newItems = (savedItems || []).concat(newItem);
@@ -76,12 +76,8 @@ async function pickSavedItem(): Promise<SavedItem | undefined> {
 		vscode.window.showErrorMessage('No RegExps were saved yet');
 		return;
 	}
-	const quickPickItems = savedItems.map(item => ({ 
-		label: item.name || '(No name)', 
-		...item
-	}));
 	const pickedItem = await vscode.window.showQuickPick(
-		quickPickItems,
+		savedItems.map(item => ({ label: '(No label)', ...item })),
 		{ placeHolder: 'Select a saved RegExp' }
 	);
 	if (!pickedItem) {
@@ -106,7 +102,7 @@ function replace({ textEditor, pickedItem, currentText, range }: {
 }
 
 interface SavedItem {
-	name: string;
+	label: string;
 	regExp: string;
 	replacePattern?: string;
 	flags?: string;
