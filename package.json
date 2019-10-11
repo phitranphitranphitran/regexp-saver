@@ -22,6 +22,12 @@
 			"command": "extension.replaceInFile",
 			"title": "RegExp Saver: Replace in File"
 		}],
+		"menus": {
+			"editor/context": [{
+				"when": "editorHasSelection",
+				"command": "extension.replaceInSelection"
+			}]
+		},
 		"configuration": {
 			"title": "RegExp Saver",
 			"properties": {
