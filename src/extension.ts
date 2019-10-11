@@ -44,10 +44,10 @@ async function saveNew() {
 		return;
 	}
 	const replacePattern = await vscode.window.showInputBox({ 
-		prompt: 'Enter your replace pattern',
+		prompt: 'Enter your replace pattern, or blank to delete all matches',
 		ignoreFocusOut: true
 	});
-	if (!replacePattern) {
+	if (replacePattern === undefined) {
 		return;
 	}
 	const name = await vscode.window.showInputBox({ 
@@ -91,10 +91,6 @@ async function pickSavedItem(): Promise<SavedItem | undefined> {
 		vscode.window.showErrorMessage('Selected RegExp has no regExp specified');
 		return;
 	}
-	if (!pickedItem.replacePattern) {
-		vscode.window.showErrorMessage('Selected RegExp has no replacePattern specified');
-		return;
-	}
 	return pickedItem;
 }
 
@@ -105,13 +101,13 @@ function replace({ textEditor, pickedItem, currentText, range }: {
 	range: vscode.Range,
 }) {
 	const regExp = new RegExp(pickedItem.regExp, pickedItem.flags || 'g');
-	const newText = currentText.replace(regExp, pickedItem.replacePattern);
+	const newText = currentText.replace(regExp, pickedItem.replacePattern || '');
 	textEditor.edit(builder => builder.replace(range, newText));
 }
 
 interface SavedItem {
 	name: string;
 	regExp: string;
-	replacePattern: string;
+	replacePattern?: string;
 	flags?: string;
 }

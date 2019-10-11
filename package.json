@@ -51,7 +51,7 @@
 							},
 							"replacePattern": {
 								"type": "string",
-								"description": "$1, $2, $3..."
+								"description": "Leave blank to delete. Otherwise the format is $1, $2, $3..."
 							},
 							"regExpFlags": {
 								"type": "string",
