@@ -4,6 +4,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.concat([
 		vscode.commands.registerTextEditorCommand('extension.replaceInSelection', replaceInSelection),
 		vscode.commands.registerTextEditorCommand('extension.replaceInFile', replaceInFile),
+		vscode.commands.registerCommand('extension.saveNew', saveNew),
 	]);
 }
 
@@ -32,6 +33,36 @@ async function replaceInFile(textEditor: vscode.TextEditor) {
 		textEditor.document.positionAt(currentText.length - 1)
 	);
 	replace({ textEditor, pickedItem, currentText, range: documentTextRange });
+}
+
+async function saveNew() {
+	const regExp = await vscode.window.showInputBox({ 
+		prompt: 'Enter your regular expression',
+		ignoreFocusOut: true
+	});
+	if (!regExp) {
+		return;
+	}
+	const replacePattern = await vscode.window.showInputBox({ 
+		prompt: 'Enter your replace pattern',
+		ignoreFocusOut: true
+	});
+	if (!replacePattern) {
+		return;
+	}
+	const name = await vscode.window.showInputBox({ 
+		prompt: 'Enter a name for your new RegExp',
+		ignoreFocusOut: true
+	});
+	if (!name) {
+		return;
+	}
+	const newItem = { name, regExp, replacePattern };
+	const configuration = vscode.workspace.getConfiguration();
+	const savedItems: any[] | undefined = configuration.get('regExpSaver.saved');
+	const newItems = (savedItems || []).concat(newItem);
+	configuration.update('regExpSaver.saved', newItems, true);
+	vscode.window.showInformationMessage('RegExp saved');
 }
 
 /**
