@@ -16,21 +16,27 @@
 	],
 	"main": "./out/extension.js",
 	"contributes": {
-		"commands": [{
-			"command": "regExpSaver.replaceInSelection",
-			"title": "RegExp Saver: Replace in Selection"
-		}, {
-			"command": "regExpSaver.replaceInFile",
-			"title": "RegExp Saver: Replace in File"
-		}, {
-			"command": "regExpSaver.saveNew",
-			"title": "RegExp Saver: Save New RegExp"
-		}],
+		"commands": [
+			{
+				"command": "regExpSaver.replaceInSelection",
+				"title": "RegExp Saver: Replace in Selection"
+			},
+			{
+				"command": "regExpSaver.replaceInFile",
+				"title": "RegExp Saver: Replace in File"
+			},
+			{
+				"command": "regExpSaver.saveNew",
+				"title": "RegExp Saver: Save New RegExp"
+			}
+		],
 		"menus": {
-			"editor/context": [{
-				"when": "editorHasSelection",
-				"command": "regExpSaver.replaceInSelection"
-			}]
+			"editor/context": [
+				{
+					"when": "editorHasSelection",
+					"command": "regExpSaver.replaceInSelection"
+				}
+			]
 		},
 		"configuration": {
 			"title": "RegExp Saver",
@@ -75,11 +81,14 @@
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^5.2.6",
 		"@types/node": "^10.12.21",
+		"@types/sinon": "^7.5.0",
 		"@types/vscode": "^1.38.0",
 		"glob": "^7.1.4",
 		"mocha": "^6.1.4",
-		"typescript": "^3.3.1",
+		"sinon": "^7.5.0",
 		"tslint": "^5.12.1",
+		"typescript": "^3.3.1",
 		"vscode-test": "^1.2.0"
-	}
+	},
+	"dependencies": {}
 }
