@@ -48,6 +48,7 @@ describe('Extension Test Suite', function() {
 		await textEditor.edit(builder => builder.replace(document.positionAt(0), text));
 
 		await vscode.commands.executeCommand('regExpSaver.replaceInFile');
+		await delay();
 
 		assert.equal(document.getText(), expected);
 	});
@@ -124,6 +125,32 @@ describe('Extension Test Suite', function() {
 		textEditor.selection = new vscode.Selection(1, 0, 2, 0);
 		await delay();
 		await vscode.commands.executeCommand('regExpSaver.replaceInSelection');
+		await delay();
+
+		assert.equal(document.getText(), expected);
+	});
+
+	it('passes through flags', async function() {
+		const savedRegExp = {
+			label: 'Replace line with abc if line contains abc',
+			regExp: '.*(abc).*',
+			replacePattern: '$1',
+			flags: 'ig'
+		};
+		sinon.stub(vscode.window, 'showQuickPick').callsFake(async () => savedRegExp);
+		const text = dedent`
+			ABC123 def 456 !!!
+			acbac blahblahabc?
+			dfbgidng*$%H@IGWhj
+			49th34abc ihg94y3`;
+		const expected = dedent`
+			ABC
+			abc
+			dfbgidng*$%H@IGWhj
+			abc`;
+		await textEditor.edit(builder => builder.replace(document.positionAt(0), text));
+
+		await vscode.commands.executeCommand('regExpSaver.replaceInFile');
 		await delay();
 
 		assert.equal(document.getText(), expected);
