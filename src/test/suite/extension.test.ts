@@ -36,7 +36,7 @@ describe('Extension Test Suite', function() {
 		};
 		sinon.stub(vscode.window, 'showQuickPick').callsFake(async () => savedRegExp);
 		const text = dedent`
-			abc 123 def 456 !!!
+			abc123 def 456 !!!
 			acbac blahblahabc?
 			dfbgidng*$%H@IGWhj
 			49th34abc ihg94y3`;
@@ -60,13 +60,63 @@ describe('Extension Test Suite', function() {
 		};
 		sinon.stub(vscode.window, 'showQuickPick').callsFake(async () => savedRegExp);
 		const text = dedent`
-			abc 123 def 456 !!!
+			abc123 def 456 !!!
 			acbac blahblahabc?
 			dfbgidng*$%H@IGWhj
 			49th34abc ihg94y3`;
 		const expected = dedent`
-			abc 123 def 456 !!!
+			abc123 def 456 !!!
 			abc
+			dfbgidng*$%H@IGWhj
+			49th34abc ihg94y3`;
+		await textEditor.edit(builder => builder.replace(document.positionAt(0), text));
+
+		textEditor.selection = new vscode.Selection(1, 0, 2, 0);
+		await delay();
+		await vscode.commands.executeCommand('regExpSaver.replaceInSelection');
+		await delay();
+
+		assert.equal(document.getText(), expected);
+	});
+
+	it('can delete in file', async function() {
+		const savedRegExp = {
+			label: 'Remove abc',
+			regExp: 'abc'
+		};
+		sinon.stub(vscode.window, 'showQuickPick').callsFake(async () => savedRegExp);
+		const text = dedent`
+			abc123 def 456 !!!
+			acbac blahblahabc?
+			dfbgidng*$%H@IGWhj
+			49th34abc ihg94y3`;
+		const expected = dedent`
+			123 def 456 !!!
+			acbac blahblah?
+			dfbgidng*$%H@IGWhj
+			49th34 ihg94y3`;
+		await textEditor.edit(builder => builder.replace(document.positionAt(0), text));
+
+		await vscode.commands.executeCommand('regExpSaver.replaceInFile');
+		await delay();
+
+		assert.equal(document.getText(), expected);
+	});
+
+	it('can delete in selection', async function() {
+		const savedRegExp = {
+			label: 'Remove abc',
+			regExp: 'abc'
+		};
+		sinon.stub(vscode.window, 'showQuickPick').callsFake(async () => savedRegExp);
+		const text = dedent`
+			abc123 def 456 !!!
+			acbac blahblahabc?
+			dfbgidng*$%H@IGWhj
+			49th34abc ihg94y3`;
+		const expected = dedent`
+			abc123 def 456 !!!
+			acbac blahblah?
 			dfbgidng*$%H@IGWhj
 			49th34abc ihg94y3`;
 		await textEditor.edit(builder => builder.replace(document.positionAt(0), text));
@@ -84,7 +134,7 @@ describe('Extension Test Suite', function() {
  * It seems like doing some things in the Extension Development Host requires
  * waiting for a little bit before the changes actually apply. For example
  * setting textEditor.selection or executing commands. Not sure which things
- * or when lol. 25ms seems to be enough.
+ * or when lol.
  */
 function delay(time = 25) {
 	return new Promise(resolve => setTimeout(resolve, time));
