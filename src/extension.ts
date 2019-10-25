@@ -14,17 +14,17 @@ async function replaceInSelection(textEditor: vscode.TextEditor) {
 		vscode.window.showErrorMessage('No selection made');
 		return;
 	}
-	const pickedItem = await pickSavedItem();
-	if (!pickedItem) {
+	const savedItem = await pickSavedItem();
+	if (!savedItem) {
 		return;
 	}
 	const currentText = textEditor.document.getText(selection);
-	return replace({ textEditor, pickedItem, currentText, range: selection });
+	return replace({ textEditor, savedItem, currentText, range: selection });
 }
 
 async function replaceInFile(textEditor: vscode.TextEditor) {
-	const pickedItem = await pickSavedItem();
-	if (!pickedItem) {
+	const savedItem = await pickSavedItem();
+	if (!savedItem) {
 		return;
 	}
 	const currentText = textEditor.document.getText();
@@ -32,7 +32,7 @@ async function replaceInFile(textEditor: vscode.TextEditor) {
 		textEditor.document.positionAt(0), 
 		textEditor.document.positionAt(currentText.length)
 	);
-	return replace({ textEditor, pickedItem, currentText, range: documentTextRange });
+	return replace({ textEditor, savedItem, currentText, range: documentTextRange });
 }
 
 async function saveNew() {
@@ -76,28 +76,28 @@ async function pickSavedItem(): Promise<SavedItem | undefined> {
 		vscode.window.showErrorMessage('No RegExps were saved yet');
 		return;
 	}
-	const pickedItem = await vscode.window.showQuickPick(
+	const savedItem = await vscode.window.showQuickPick(
 		savedItems.map(item => ({ label: '(No label)', ...item })),
 		{ placeHolder: 'Select a saved RegExp' }
 	);
-	if (!pickedItem) {
+	if (!savedItem) {
 		return;
 	}
-	if (!pickedItem.regExp) {
+	if (!savedItem.regExp) {
 		vscode.window.showErrorMessage('Selected RegExp has no regExp specified');
 		return;
 	}
-	return pickedItem;
+	return savedItem;
 }
 
-function replace({ textEditor, pickedItem, currentText, range }: {
+function replace({ textEditor, savedItem, currentText, range }: {
 	textEditor: vscode.TextEditor, 
-	pickedItem: SavedItem, 
+	savedItem: SavedItem, 
 	currentText: string, 
 	range: vscode.Range,
 }) {
-	const regExp = new RegExp(pickedItem.regExp, pickedItem.flags || 'g');
-	const newText = currentText.replace(regExp, pickedItem.replacePattern || '');
+	const regExp = new RegExp(savedItem.regExp, savedItem.flags || 'g');
+	const newText = currentText.replace(regExp, savedItem.replacePattern || '');
 	return textEditor.edit(builder => builder.replace(range, newText));
 }
 
