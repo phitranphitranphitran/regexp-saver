@@ -34,7 +34,7 @@ describe('Extension Test Suite', function() {
 			regExp: '.*(abc).*',
 			replacePattern: '$1'
 		};
-		sinon.stub(vscode.window, 'showQuickPick').callsFake(async () => savedRegExp);
+		sinon.stub(vscode.window, 'showQuickPick').resolves(savedRegExp);
 		const text = dedent`
 			abc123 def 456 !!!
 			acbac blahblahabc?
@@ -59,7 +59,7 @@ describe('Extension Test Suite', function() {
 			regExp: '.*(abc).*',
 			replacePattern: '$1'
 		};
-		sinon.stub(vscode.window, 'showQuickPick').callsFake(async () => savedRegExp);
+		sinon.stub(vscode.window, 'showQuickPick').resolves(savedRegExp);
 		const text = dedent`
 			abc123 def 456 !!!
 			acbac blahblahabc?
@@ -85,7 +85,7 @@ describe('Extension Test Suite', function() {
 			label: 'Remove abc',
 			regExp: 'abc'
 		};
-		sinon.stub(vscode.window, 'showQuickPick').callsFake(async () => savedRegExp);
+		sinon.stub(vscode.window, 'showQuickPick').resolves(savedRegExp);
 		const text = dedent`
 			abc123 def 456 !!!
 			acbac blahblahabc?
@@ -109,7 +109,7 @@ describe('Extension Test Suite', function() {
 			label: 'Remove abc',
 			regExp: 'abc'
 		};
-		sinon.stub(vscode.window, 'showQuickPick').callsFake(async () => savedRegExp);
+		sinon.stub(vscode.window, 'showQuickPick').resolves(savedRegExp);
 		const text = dedent`
 			abc123 def 456 !!!
 			acbac blahblahabc?
@@ -137,7 +137,7 @@ describe('Extension Test Suite', function() {
 			replacePattern: '$1',
 			flags: 'ig'
 		};
-		sinon.stub(vscode.window, 'showQuickPick').callsFake(async () => savedRegExp);
+		sinon.stub(vscode.window, 'showQuickPick').resolves(savedRegExp);
 		const text = dedent`
 			ABC123 def 456 !!!
 			acbac blahblahabc?
