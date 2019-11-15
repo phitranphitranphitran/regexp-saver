@@ -3,11 +3,11 @@ import * as vscode from 'vscode';
 import * as sinon from 'sinon';
 import dedent from 'ts-dedent';
 import { describe, it, before, beforeEach , after, afterEach } from 'mocha';
+import { SavedItem } from '../../types';
 
 describe('Extension Test Suite', function() {
 	let document: vscode.TextDocument;
 	let textEditor: vscode.TextEditor;
-	let configuration: vscode.WorkspaceConfiguration;
 	let previousSavedItems: any[] | undefined;
 
 	before(async function() {
@@ -15,10 +15,8 @@ describe('Extension Test Suite', function() {
 		document = await vscode.workspace.openTextDocument();
 		textEditor = await vscode.window.showTextDocument(document);
 
-		configuration = vscode.workspace.getConfiguration();
-
 		// Hold onto previously saved items to restore after tests
-		previousSavedItems = configuration.get('regExpSaver.saved');
+		previousSavedItems = getSavedItems();
 	});
 
 	beforeEach(async function() {
@@ -31,7 +29,7 @@ describe('Extension Test Suite', function() {
 		await textEditor.edit(builder => builder.delete(documentTextRange));
 
 		// Clear saved items
-		await configuration.update('regExpSaver.saved', undefined, true);
+		await updateSavedItems(undefined);
 	});
 
 	afterEach(function() {
@@ -41,7 +39,7 @@ describe('Extension Test Suite', function() {
 
 	after(async function() {
 		// Restore previously saved items
-		await configuration.update('regExpSaver.saved', previousSavedItems, true);
+		await updateSavedItems(previousSavedItems);
 	});
 
 	it('can replace in file', async function() {
@@ -50,7 +48,7 @@ describe('Extension Test Suite', function() {
 			regExp: '.*(abc).*',
 			replacePattern: '$1'
 		};
-		await configuration.update('regExpSaver.saved', [savedRegExp], true);
+		await updateSavedItems([savedRegExp]);
 		sinon.stub(vscode.window, 'showQuickPick').resolves(savedRegExp);
 		const text = dedent`
 			abc123 def 456 !!!
@@ -76,7 +74,7 @@ describe('Extension Test Suite', function() {
 			regExp: '.*(abc).*',
 			replacePattern: '$1'
 		};
-		await configuration.update('regExpSaver.saved', [savedRegExp], true);
+		await updateSavedItems([savedRegExp]);
 		sinon.stub(vscode.window, 'showQuickPick').resolves(savedRegExp);
 		const text = dedent`
 			abc123 def 456 !!!
@@ -104,7 +102,7 @@ describe('Extension Test Suite', function() {
 			label: 'Remove abc',
 			regExp: 'abc'
 		};
-		await configuration.update('regExpSaver.saved', [savedRegExp], true);
+		await updateSavedItems([savedRegExp]);
 		sinon.stub(vscode.window, 'showQuickPick').resolves(savedRegExp);
 		const text = dedent`
 			abc123 def 456 !!!
@@ -129,7 +127,7 @@ describe('Extension Test Suite', function() {
 			label: 'Remove abc',
 			regExp: 'abc'
 		};
-		await configuration.update('regExpSaver.saved', [savedRegExp], true);
+		await updateSavedItems([savedRegExp]);
 		sinon.stub(vscode.window, 'showQuickPick').resolves(savedRegExp);
 		const text = dedent`
 			abc123 def 456 !!!
@@ -159,7 +157,7 @@ describe('Extension Test Suite', function() {
 			replacePattern: '$1',
 			flags: 'ig'
 		};
-		await configuration.update('regExpSaver.saved', [savedRegExp], true);
+		await updateSavedItems([savedRegExp]);
 		sinon.stub(vscode.window, 'showQuickPick').resolves(savedRegExp);
 		const text = dedent`
 			ABC123 def 456 !!!
@@ -188,9 +186,7 @@ describe('Extension Test Suite', function() {
 		await vscode.commands.executeCommand('regExpSaver.saveNew');
 		await delay();
 
-		// Need to use `getConfiguration()` here instead of `configuration` because for some reason
-		// configuration.get('regExpSaver.saved') returns the user's previously saved items.
-		const savedItems = vscode.workspace.getConfiguration().get('regExpSaver.saved');
+		const savedItems = getSavedItems();
 		assert.deepEqual(savedItems, [{
 			label: 'Replace line with abc if line contains abc',
 			regExp: '.*(abc).*',
@@ -198,6 +194,14 @@ describe('Extension Test Suite', function() {
 		}]);
 	});
 });
+
+function getSavedItems(): SavedItem[] | undefined {
+	return vscode.workspace.getConfiguration().get('regExpSaver.saved');
+}
+
+async function updateSavedItems(newSavedItems: SavedItem[] | undefined) {
+	return vscode.workspace.getConfiguration().update('regExpSaver.saved', newSavedItems, true);
+}
 
 function resetStubbedMethod(sourceObject: any, methodName: string) {
 	const method = sourceObject[methodName] as any;
