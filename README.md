@@ -10,7 +10,7 @@ Open the Command Palette (ctrl/cmd + shift + P) and start typing in "RegExp Save
 - Replace in File
 - Replace in Selection
 
-TODO: add animation
+![recording](recording.gif)
 
 ## Extension Settings
 
@@ -31,12 +31,12 @@ The regular expression pattern.
 IMPORTANT: backslashes need to be doubled up. Example: `\w` needs to be `\\w`.
 (This isn't a problem when using the command "RegExp Saver: Save new RegExp", just when manually editing the settings JSON)
 
-`replacePattern`
+`replacePattern`:
 The replacement pattern for replacing characters matched by your `regExp` pattern.
 Each capture group can be referenced like `$1`, `$2`, `$3`, etc.
 Leave blank to delete everything your `regExp` matched. 
 
-`regExpFlags`
+`regExpFlags`:
 Flags such as "g", "i", and "m". Default is just "g".
 
 ## Release Notes
