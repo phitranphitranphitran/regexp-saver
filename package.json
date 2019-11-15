@@ -44,25 +44,26 @@
 				"regExpSaver.saved": {
 					"type": "array",
 					"default": [],
-					"description": "Saved regular expressions to re-use",
+					"description": "Save your regular expressions to re-use under this array. Each object in this array becomes an item you can pick to apply when using commands such as 'Replace in File'",
 					"items": {
 						"type": "object",
 						"properties": {
 							"label": {
-								"type": "string"
+								"type": "string",
+								"description": "A descriptive label for your regular expression. Will be shown in the menu when picking which one to apply to your file or selection."
 							},
 							"regExp": {
 								"type": "string",
-								"description": "IMPORTANT: backslashes need to be doubled up. Example: \\w needs to be \\\\w"
+								"description": "The regular expression pattern. IMPORTANT: backslashes need to be doubled up. Example: \\w needs to be \\\\w. (This isn't a problem when using the command 'RegExp Saver: Save new RegExp', just when manually editing the settings JSON)"
 							},
 							"replacePattern": {
 								"type": "string",
-								"description": "Leave blank to delete. Otherwise the format is $1, $2, $3..."
+								"description": "The replacement pattern for replacing characters matched by your `regExp` pattern. Each capture group can be referenced like `$1`, `$2`, `$3`, etc. Leave blank to delete everything your `regExp` matched."
 							},
 							"regExpFlags": {
 								"type": "string",
 								"default": "g",
-								"description": "Flags such as g, i, m, s. Default is just g."
+								"description": "Flags such as 'g', 'i', and 'm'. Default is just 'g'."
 							}
 						}
 					}

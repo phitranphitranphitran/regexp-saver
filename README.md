@@ -1,65 +1,46 @@
-# regexp-saver README
+# regexp-saver
 
-This is the README for your extension "regexp-saver". After writing up a brief description, we recommend including the following sections.
+Visual Studio Code extension for saving and re-using regular expressions while coding.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+Open the Command Palette (ctrl/cmd + shift + P) and start typing in "RegExp Saver" to see the commands available. The available commands are:
 
-For example if there is an image subfolder under your extension project workspace:
+- Save new RegExp
+- Replace in File
+- Replace in Selection
 
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+TODO: add animation
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
 This extension contributes the following settings:
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+`regExpSaver.saved`: save your regular expressions to re-use under this array. Each object in this array becomes an item you can pick to apply when using commands such as "Replace in File".
 
-## Known Issues
+Instead of manually editing the JSON, you can use the interface provided by the command "RegExp Saver: Save new RegExp" under the Command Palette (ctrl/cmd + shift + P). If you'd like to manually edit the JSON, see below for the options that each object can define.
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+### regExpSaver.saved object options
+
+`label`:
+A descriptive label for your regular expression. Will be shown in the menu
+when picking which one to apply to your file or selection.
+
+`regExp`:
+The regular expression pattern.
+IMPORTANT: backslashes need to be doubled up. Example: `\w` needs to be `\\w`.
+(This isn't a problem when using the command "RegExp Saver: Save new RegExp", just when manually editing the settings JSON)
+
+`replacePattern`
+The replacement pattern for replacing characters matched by your `regExp` pattern.
+Each capture group can be referenced like `$1`, `$2`, `$3`, etc.
+Leave blank to delete everything your `regExp` matched. 
+
+`regExpFlags`
+Flags such as "g", "i", and "m". Default is just "g".
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
-
 ### 1.0.0
 
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+Initial release
