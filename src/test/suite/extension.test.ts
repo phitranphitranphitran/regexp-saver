@@ -90,6 +90,7 @@ describe('Extension Test Suite', function() {
 			49th34abc ihg94y3`;
 		await textEditor.edit(builder => builder.replace(document.positionAt(0), text));
 
+		// Select the second line
 		textEditor.selection = new vscode.Selection(1, 0, 2, 0);
 		await delay();
 		await vscode.commands.executeCommand('regExpSaver.replaceInSelection');
@@ -142,6 +143,7 @@ describe('Extension Test Suite', function() {
 			49th34abc ihg94y3`;
 		await textEditor.edit(builder => builder.replace(document.positionAt(0), text));
 
+		// Select the second line
 		textEditor.selection = new vscode.Selection(1, 0, 2, 0);
 		await delay();
 		await vscode.commands.executeCommand('regExpSaver.replaceInSelection');
@@ -184,9 +186,11 @@ describe('Extension Test Suite', function() {
 		stub.onCall(2).resolves('Replace line with abc if line contains abc');
 
 		await vscode.commands.executeCommand('regExpSaver.saveNew');
-		await delay(100);
-		const savedItems = configuration.get('regExpSaver.saved');
+		await delay();
 
+		// Need to use `getConfiguration()` here instead of `configuration` because for some reason
+		// configuration.get('regExpSaver.saved') returns the user's previously saved items.
+		const savedItems = vscode.workspace.getConfiguration().get('regExpSaver.saved');
 		assert.deepEqual(savedItems, [{
 			label: 'Replace line with abc if line contains abc',
 			regExp: '.*(abc).*',
