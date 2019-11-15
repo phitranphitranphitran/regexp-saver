@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { SavedItem } from './types';
 
 export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.concat([
@@ -99,11 +100,4 @@ function replace({ textEditor, savedItem, currentText, range }: {
 	const regExp = new RegExp(savedItem.regExp, savedItem.flags || 'g');
 	const newText = currentText.replace(regExp, savedItem.replacePattern || '');
 	return textEditor.edit(builder => builder.replace(range, newText));
-}
-
-interface SavedItem {
-	label: string;
-	regExp: string;
-	replacePattern?: string;
-	flags?: string;
 }
