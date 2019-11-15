@@ -9,7 +9,7 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 async function replaceInSelection(textEditor: vscode.TextEditor) {
-	const selection = textEditor.selection;
+	const { selection } = textEditor;
 	if (selection.isEmpty) {
 		vscode.window.showErrorMessage('No selection made');
 		return;
@@ -59,8 +59,8 @@ async function saveNew() {
 	}
 	const newItem = { label, regExp, replacePattern };
 	const configuration = vscode.workspace.getConfiguration();
-	const savedItems: any[] | undefined = configuration.get('regExpSaver.saved');
-	const newItems = (savedItems || []).concat(newItem);
+	const savedItems: any[] = configuration.get('regExpSaver.saved', []);
+	const newItems = savedItems.concat(newItem);
 	await configuration.update('regExpSaver.saved', newItems, true);
 	vscode.window.showInformationMessage('RegExp saved');
 }
@@ -71,8 +71,8 @@ async function saveNew() {
  */
 async function pickSavedItem(): Promise<SavedItem | undefined> {
 	const configuration = vscode.workspace.getConfiguration();
-	const savedItems: any[] | undefined = configuration.get('regExpSaver.saved');
-	if (!savedItems || !savedItems.length) {
+	const savedItems: any[] = configuration.get('regExpSaver.saved', []);
+	if (!savedItems.length) {
 		vscode.window.showErrorMessage('No RegExps were saved yet');
 		return;
 	}
