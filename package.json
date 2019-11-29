@@ -3,6 +3,10 @@
 	"displayName": "RegExp Saver",
 	"description": "Save regular expressions to quickly re-use for find and replace",
 	"version": "0.0.1",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/phitranphitranphitran/regexp-saver.git"
+	},
 	"engines": {
 		"vscode": "^1.38.0"
 	},
@@ -54,7 +58,7 @@
 							},
 							"regExp": {
 								"type": "string",
-								"description": "The regular expression pattern. IMPORTANT: backslashes need to be doubled up. Example: \\w needs to be \\\\w. (This isn't a problem when using the command 'RegExp Saver: Save new RegExp', just when manually editing the settings JSON)"
+								"description": "The regular expression pattern. IMPORTANT: backslashes need to be doubled up. Example: \\w needs to be \\\\w. Otherwise JSON will think `\\w` is just `w`. (This isn't a problem when using the command 'RegExp Saver: Save new RegExp', just when manually editing the settings JSON)"
 							},
 							"replacePattern": {
 								"type": "string",
@@ -63,7 +67,7 @@
 							"regExpFlags": {
 								"type": "string",
 								"default": "g",
-								"description": "Flags such as 'g', 'i', and 'm'. Default is just 'g'."
+								"description": "Flags such as 'g', 'i', and 'm'. Unspecified defaults to 'g'."
 							}
 						}
 					}
