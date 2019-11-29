@@ -1,24 +1,30 @@
 {
 	"name": "regexp-saver",
 	"displayName": "RegExp Saver",
+	"version": "1.0.0",
+	"publisher": "phi",
 	"description": "Save regular expressions to quickly re-use for find and replace",
-	"version": "0.0.1",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/phitranphitranphitran/regexp-saver.git"
+	"author": {
+		"name": "Phi Tran"
 	},
-	"engines": {
-		"vscode": "^1.38.0"
-	},
-	"categories": [
-		"Other"
-	],
+	"categories": ["Other", "Formatters"],
+	"keywords": ["regexp", "saver", "regular", "expression", "replace"],
 	"activationEvents": [
 		"onCommand:regExpSaver.replaceInSelection",
 		"onCommand:regExpSaver.replaceInFile",
 		"onCommand:regExpSaver.saveNew"
 	],
+	"engines": {
+		"vscode": "^1.38.0"
+	},
 	"main": "./out/extension.js",
+	"scripts": {
+		"vscode:prepublish": "yarn run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"pretest": "yarn run compile",
+		"test": "node ./out/test/runTest.js"
+	},
 	"contributes": {
 		"commands": [
 			{
@@ -75,13 +81,6 @@
 			}
 		}
 	},
-	"scripts": {
-		"vscode:prepublish": "yarn run compile",
-		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./",
-		"pretest": "yarn run compile",
-		"test": "node ./out/test/runTest.js"
-	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^5.2.6",
@@ -97,5 +96,10 @@
 	},
 	"dependencies": {
 		"ts-dedent": "^1.1.0"
+	},
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/phitranphitranphitran/regexp-saver.git"
 	}
 }

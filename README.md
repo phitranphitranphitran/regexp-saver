@@ -62,3 +62,7 @@ A string of flags such as "g", "i", and "m". Unspecified defaults to "g".
 ### 1.0.0
 
 Initial release
+
+## Thanks
+
+Made during 10% time at Security Compass
