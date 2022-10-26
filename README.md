@@ -14,13 +14,17 @@ Open the Command Palette (ctrl/cmd + shift + P) and start typing in "RegExp Save
 
 ## Extension Settings
 
+To edit your extension settings open the Command Palette (ctrl/cmd + shift + P) and you can either
+choose "Preferences: Open User Settings (JSON)" or "Preferences: Open Workspace Settings (JSON)".
+[See the difference here.](https://code.visualstudio.com/docs/getstarted/settings)
+
 This extension contributes the following settings:
 
 `regExpSaver.saved`: save your regular expressions to re-use under this array. Each object in this array becomes an item you can pick to apply when using the RegExp Saver commands.
 
 Instead of manually editing the JSON, you can use the interface provided by the command "RegExp Saver: Save new RegExp" under the Command Palette (ctrl/cmd + shift + P). If you'd like to manually edit the JSON, see below for the options that each object can define.
 
-#### Object options
+### Object options
 
 `label`:
 A descriptive label for your regular expression. Will be shown in the menu
@@ -35,7 +39,7 @@ Otherwise JSON will think `\w` is just `w`.
 `replacePattern`:
 The replacement pattern for replacing characters matched by your `regExp` pattern.
 Each capture group can be referenced like `$1`, `$2`, `$3`, etc.
-Leave blank to delete everything your `regExp` matched. 
+Leave blank to delete everything your `regExp` matched.
 
 `regExpFlags`:
 A string of flags such as "g", "i", and "m". Unspecified defaults to "g".
