@@ -155,7 +155,7 @@ describe('Extension Test Suite', function() {
 			label: 'Replace line with abc if line contains abc',
 			regExp: '.*(abc).*',
 			replacePattern: '$1',
-			flags: 'ig'
+			regExpFlags: 'ig'
 		};
 		await updateSavedItems([savedRegExp]);
 		sinon.stub(vscode.window, 'showQuickPick').resolves(savedRegExp);

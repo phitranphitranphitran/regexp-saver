@@ -97,7 +97,7 @@ function replace({ textEditor, savedItem, currentText, range }: {
 	currentText: string, 
 	range: vscode.Range,
 }) {
-	const regExp = new RegExp(savedItem.regExp, savedItem.flags || 'g');
+	const regExp = new RegExp(savedItem.regExp, savedItem.regExpFlags || 'g');
 	const newText = currentText.replace(regExp, savedItem.replacePattern || '');
 	return textEditor.edit(builder => builder.replace(range, newText));
 }
