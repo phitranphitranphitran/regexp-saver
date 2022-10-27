@@ -3,37 +3,12 @@ import { SavedItem } from './types';
 
 export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.concat([
-		vscode.commands.registerTextEditorCommand('regExpSaver.replaceInSelection', replaceInSelection),
-		vscode.commands.registerTextEditorCommand('regExpSaver.replaceInFile', replaceInFile),
 		vscode.commands.registerCommand('regExpSaver.saveNew', saveNew),
+		vscode.commands.registerTextEditorCommand('regExpSaver.findInFile', findInFile),
+		vscode.commands.registerTextEditorCommand('regExpSaver.findInSelection', findInSelection),
+		vscode.commands.registerTextEditorCommand('regExpSaver.replaceInFile', replaceInFile),
+		vscode.commands.registerTextEditorCommand('regExpSaver.replaceInSelection', replaceInSelection),
 	]);
-}
-
-async function replaceInSelection(textEditor: vscode.TextEditor) {
-	const { selection } = textEditor;
-	if (selection.isEmpty) {
-		vscode.window.showErrorMessage('No selection made');
-		return;
-	}
-	const savedItem = await pickSavedItem();
-	if (!savedItem) {
-		return;
-	}
-	const currentText = textEditor.document.getText(selection);
-	return replace({ textEditor, savedItem, currentText, range: selection });
-}
-
-async function replaceInFile(textEditor: vscode.TextEditor) {
-	const savedItem = await pickSavedItem();
-	if (!savedItem) {
-		return;
-	}
-	const currentText = textEditor.document.getText();
-	const documentTextRange = new vscode.Range(
-		textEditor.document.positionAt(0), 
-		textEditor.document.positionAt(currentText.length)
-	);
-	return replace({ textEditor, savedItem, currentText, range: documentTextRange });
 }
 
 async function saveNew() {
@@ -45,7 +20,7 @@ async function saveNew() {
 		return;
 	}
 	const replacePattern = await vscode.window.showInputBox({ 
-		prompt: 'Enter your replace pattern, or blank to delete all matches',
+		prompt: '(Optional) Enter your replace pattern, or blank to delete all matches',
 		ignoreFocusOut: true
 	});
 	if (replacePattern === undefined) {
@@ -64,6 +39,41 @@ async function saveNew() {
 	const newItems = savedItems.concat(newItem);
 	await configuration.update('regExpSaver.saved', newItems, true);
 	vscode.window.showInformationMessage('RegExp saved');
+}
+
+async function findInFile() {
+	return prepopulateFindWidget();
+}
+
+async function findInSelection() {
+	return prepopulateFindWidget({ findInSelection: true })
+}
+
+async function replaceInFile(textEditor: vscode.TextEditor) {
+	const savedItem = await pickSavedItem();
+	if (!savedItem) {
+		return;
+	}
+	const currentText = textEditor.document.getText();
+	const documentTextRange = new vscode.Range(
+		textEditor.document.positionAt(0), 
+		textEditor.document.positionAt(currentText.length)
+	);
+	return replace({ textEditor, savedItem, currentText, range: documentTextRange });
+}
+
+async function replaceInSelection(textEditor: vscode.TextEditor) {
+	const { selection } = textEditor;
+	if (selection.isEmpty) {
+		vscode.window.showErrorMessage('No selection made');
+		return;
+	}
+	const savedItem = await pickSavedItem();
+	if (!savedItem) {
+		return;
+	}
+	const currentText = textEditor.document.getText(selection);
+	return replace({ textEditor, savedItem, currentText, range: selection });
 }
 
 /**
@@ -89,6 +99,20 @@ async function pickSavedItem(): Promise<SavedItem | undefined> {
 		return;
 	}
 	return savedItem;
+}
+
+async function prepopulateFindWidget(args: Record<string, any> = {}) {
+	const savedItem = await pickSavedItem();
+	if (!savedItem) {
+		return;
+	}
+	// https://github.com/microsoft/vscode/commit/8e96e0b389aedf46423431487190b878d4243edb#diff-444cc462cb29242433c26a3b0c72f7cae991cfcd26f4d493b5fb28586426e2bd
+	vscode.commands.executeCommand('editor.actions.findWithArgs', {
+		searchString: savedItem.regExp,
+		replaceString: savedItem.replacePattern,
+		isRegex: true,
+		...args
+	});
 }
 
 function replace({ textEditor, savedItem, currentText, range }: {

@@ -19,9 +19,12 @@
 		"replace"
 	],
 	"activationEvents": [
+		"onCommand:regExpSaver.saveNew",
+		"onCommand:regExpSaver.findInFile",
+		"onCommand:regExpSaver.findInSelection",
 		"onCommand:regExpSaver.replaceInSelection",
-		"onCommand:regExpSaver.replaceInFile",
-		"onCommand:regExpSaver.saveNew"
+		"onCommand:regExpSaver.replaceInFile"
+
 	],
 	"engines": {
 		"vscode": "^1.38.0"
@@ -37,20 +40,32 @@
 	"contributes": {
 		"commands": [
 			{
+				"command": "regExpSaver.saveNew",
+				"title": "RegExp Saver: Save New RegExp"
+			},
+			{
+				"command": "regExpSaver.findInFile",
+				"title": "RegExp Saver: Find in File"
+			},
+			{
+				"command": "regExpSaver.findInSelection",
+				"title": "RegExp Saver: Find in Selection"
+			},
+			{
 				"command": "regExpSaver.replaceInSelection",
 				"title": "RegExp Saver: Replace in Selection"
 			},
 			{
 				"command": "regExpSaver.replaceInFile",
 				"title": "RegExp Saver: Replace in File"
-			},
-			{
-				"command": "regExpSaver.saveNew",
-				"title": "RegExp Saver: Save New RegExp"
 			}
 		],
 		"menus": {
 			"editor/context": [
+				{
+					"when": "editorHasSelection",
+					"command": "regExpSaver.findInSelection"
+				},
 				{
 					"when": "editorHasSelection",
 					"command": "regExpSaver.replaceInSelection"
