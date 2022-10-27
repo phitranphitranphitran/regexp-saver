@@ -88,7 +88,7 @@ async function pickSavedItem(): Promise<SavedItem | undefined> {
 		return;
 	}
 	const savedItem = await vscode.window.showQuickPick(
-		savedItems.map(item => ({ label: '(No label)', ...item })),
+		savedItems.map(item => ({ label: '(No label)', detail: item.regExp, ...item })),
 		{ placeHolder: 'Select a saved RegExp' }
 	);
 	if (!savedItem) {
