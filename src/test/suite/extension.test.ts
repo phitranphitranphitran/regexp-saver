@@ -49,6 +49,7 @@ describe('Extension Test Suite', function() {
 		.onCall(2).resolves('Replace line with abc if line contains abc');
 
 		sinon.stub(vscode.window, 'showQuickPick')
+		// @ts-ignore https://github.com/DefinitelyTyped/DefinitelyTyped/issues/36436
 		.onCall(0).resolves('Global (default)');
 
 		await vscode.commands.executeCommand('regExpSaver.saveNew');
@@ -72,6 +73,7 @@ describe('Extension Test Suite', function() {
 		.onCall(2).resolves('Replace line with abc if line contains abc');
 
 		sinon.stub(vscode.window, 'showQuickPick')
+		// @ts-ignore https://github.com/DefinitelyTyped/DefinitelyTyped/issues/36436
 		.onCall(0).resolves('Workspace');
 
 		await vscode.commands.executeCommand('regExpSaver.saveNew');
@@ -95,6 +97,7 @@ describe('Extension Test Suite', function() {
 		.onCall(2).resolves('Replace line with abc if line contains abc');
 
 		sinon.stub(vscode.window, 'showQuickPick')
+		// @ts-ignore https://github.com/DefinitelyTyped/DefinitelyTyped/issues/36436
 		.onCall(0).resolves('');
 
 		await vscode.commands.executeCommand('regExpSaver.saveNew');
@@ -127,10 +130,8 @@ describe('Extension Test Suite', function() {
 		await vscode.commands.executeCommand('regExpSaver.replaceInFile');
 		await delay();
 
-		let quickPickItems = stub.getCall(0).args[0]
-		quickPickItems = quickPickItems.map(
-			(item: { label: string, detail: string }) => ({ label: item.label, detail: item.detail })
-		);
+		let quickPickItems = stub.getCall(0).args[0] as vscode.QuickPickItem[];
+		quickPickItems = quickPickItems.map((item) => ({ label: item.label, detail: item.detail }));
 		assert.deepStrictEqual(quickPickItems, [
 			{ label: "Workspace RegExp One", detail: 'W1' },
 			{ label: "Workspace RegExp Two", detail: 'W2' },
