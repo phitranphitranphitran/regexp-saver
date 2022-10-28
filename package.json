@@ -105,7 +105,7 @@
 				"regExpSaver.savedForWorkspace": {
 					"type": "array",
 					"default": [],
-					"description": "Save your regular expressions to re-use for a specific workspace. These items won't show when selecting a reg exp in other workspaces.",
+					"description": "Save your regular expressions to re-use for a specific workspace. These items won't show when selecting a RegExp in other workspaces.",
 					"items": {
 						"type": "object",
 						"properties": {

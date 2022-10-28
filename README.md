@@ -7,6 +7,8 @@ Visual Studio Code extension for saving and re-using regular expressions while c
 Open the Command Palette (ctrl/cmd + shift + P) and start typing in "RegExp Saver" to see the commands available. The available commands are:
 
 - Save new RegExp
+- Find in File
+- Find in Selection
 - Replace in File
 - Replace in Selection
 
@@ -21,6 +23,8 @@ choose "Preferences: Open User Settings (JSON)" or "Preferences: Open Workspace 
 This extension contributes the following settings:
 
 `regExpSaver.saved`: save your regular expressions to re-use under this array. Each object in this array becomes an item you can pick to apply when using the RegExp Saver commands.
+
+`regExpSaver.savedForWorkspace`: save your regular expressions to re-use for a specific workspace. These items won't show when selecting a RegExp in other workspaces.
 
 Instead of manually editing the JSON, you can use the interface provided by the command "RegExp Saver: Save new RegExp" under the Command Palette (ctrl/cmd + shift + P). If you'd like to manually edit the JSON, see below for the options that each object can define.
 
@@ -60,12 +64,6 @@ A string of flags such as "g", "i", and "m". Unspecified defaults to "g".
     }]
 }
 ```
-
-## Release Notes
-
-### 1.0.0
-
-Initial release
 
 ## Thanks
 
