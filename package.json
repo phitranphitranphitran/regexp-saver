@@ -27,7 +27,7 @@
 
 	],
 	"engines": {
-		"vscode": "^1.38.0"
+		"vscode": "^1.63.0"
 	},
 	"main": "./out/extension.js",
 	"scripts": {
@@ -137,7 +137,7 @@
 		"@types/mocha": "^5.2.6",
 		"@types/node": "^10.12.21",
 		"@types/sinon": "^7.5.0",
-		"@types/vscode": "^1.72.0",
+		"@types/vscode": "^1.63.0",
 		"glob": "^7.1.4",
 		"mocha": "^6.2.3",
 		"sinon": "^7.5.0",

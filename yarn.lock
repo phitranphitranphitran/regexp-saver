@@ -86,7 +86,7 @@
   resolved "https://registry.yarnpkg.com/@types/sinon/-/sinon-7.5.0.tgz#f5a10c27175465a0b001b68d8b9f761582967cc6"
   integrity sha512-NyzhuSBy97B/zE58cDw4NyGvByQbAHNP9069KVSgnXt/sc0T6MFRh0InKAeBVHJWdSXG1S3+PxgVIgKo9mTHbw==
 
-"@types/vscode@^1.72.0":
+"@types/vscode@^1.63.0":
   version "1.72.0"
   resolved "https://registry.yarnpkg.com/@types/vscode/-/vscode-1.72.0.tgz#56447ca2eaca34f0d0797c8bb9e51de132f6bb0a"
   integrity sha512-WvHluhUo+lQvE3I4wUagRpnkHuysB4qSyOQUyIAS9n9PYMJjepzTUD8Jyks0YeXoPD0UGctjqp2u84/b3v6Ydw==
