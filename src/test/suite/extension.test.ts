@@ -3,7 +3,6 @@ import * as vscode from 'vscode';
 import * as sinon from 'sinon';
 import dedent from 'ts-dedent';
 import { describe, it, before, beforeEach , after, afterEach } from 'mocha';
-import { SavedItem } from '../../types';
 
 describe('Extension Test Suite', function() {
 	let document: vscode.TextDocument;
@@ -16,7 +15,7 @@ describe('Extension Test Suite', function() {
 		textEditor = await vscode.window.showTextDocument(document);
 
 		// Hold onto previously saved items to restore after tests
-		previousSavedItems = getSavedItems();
+		previousSavedItems = vscode.workspace.getConfiguration().get('regExpSaver.saved');
 	});
 
 	beforeEach(async function() {
@@ -29,7 +28,8 @@ describe('Extension Test Suite', function() {
 		await textEditor.edit(builder => builder.delete(documentTextRange));
 
 		// Clear saved items
-		await updateSavedItems(undefined);
+		await vscode.workspace.getConfiguration().update('regExpSaver.saved', undefined, true);
+		await vscode.workspace.getConfiguration().update('regExpSaver.savedForWorkspace', undefined, false);
 	});
 
 	afterEach(function() {
@@ -39,7 +39,104 @@ describe('Extension Test Suite', function() {
 
 	after(async function() {
 		// Restore previously saved items
-		await updateSavedItems(previousSavedItems);
+		await vscode.workspace.getConfiguration().update('regExpSaver.saved', previousSavedItems, true);
+	});
+
+	it('can save new RegExp globally', async function() {
+		sinon.stub(vscode.window, 'showInputBox')
+		.onCall(0).resolves('.*(abc).*')
+		.onCall(1).resolves('$1')
+		.onCall(2).resolves('Replace line with abc if line contains abc');
+
+		sinon.stub(vscode.window, 'showQuickPick')
+		.onCall(0).resolves('Global (default)');
+
+		await vscode.commands.executeCommand('regExpSaver.saveNew');
+		await delay();
+
+		const savedGlobally = vscode.workspace.getConfiguration().get('regExpSaver.saved');
+		assert.deepStrictEqual(savedGlobally, [{
+			label: 'Replace line with abc if line contains abc',
+			regExp: '.*(abc).*',
+			replacePattern: '$1'
+		}]);
+
+		const savedForWorkspace = vscode.workspace.getConfiguration().get('regExpSaver.savedForWorkspace');
+		assert.deepStrictEqual(savedForWorkspace, []);
+	});
+
+	it('can save new RegExp for workspace', async function() {
+		sinon.stub(vscode.window, 'showInputBox')
+		.onCall(0).resolves('.*(abc).*')
+		.onCall(1).resolves('$1')
+		.onCall(2).resolves('Replace line with abc if line contains abc');
+
+		sinon.stub(vscode.window, 'showQuickPick')
+		.onCall(0).resolves('Workspace');
+
+		await vscode.commands.executeCommand('regExpSaver.saveNew');
+		await delay();
+
+		const savedGlobally = vscode.workspace.getConfiguration().get('regExpSaver.saved');
+		assert.deepStrictEqual(savedGlobally, [])
+
+		const savedForWorkspace = vscode.workspace.getConfiguration().get('regExpSaver.savedForWorkspace');
+		assert.deepStrictEqual(savedForWorkspace, [{
+			label: 'Replace line with abc if line contains abc',
+			regExp: '.*(abc).*',
+			replacePattern: '$1'
+		}]);
+	});
+
+	it('saves new RegExps globally by default', async function() {
+		sinon.stub(vscode.window, 'showInputBox')
+		.onCall(0).resolves('.*(abc).*')
+		.onCall(1).resolves('$1')
+		.onCall(2).resolves('Replace line with abc if line contains abc');
+
+		sinon.stub(vscode.window, 'showQuickPick')
+		.onCall(0).resolves('');
+
+		await vscode.commands.executeCommand('regExpSaver.saveNew');
+		await delay();
+
+		const savedGlobally = vscode.workspace.getConfiguration().get('regExpSaver.saved');
+		assert.deepStrictEqual(savedGlobally, [{
+			label: 'Replace line with abc if line contains abc',
+			regExp: '.*(abc).*',
+			replacePattern: '$1'
+		}]);
+
+		const savedForWorkspace = vscode.workspace.getConfiguration().get('regExpSaver.savedForWorkspace');
+		assert.deepStrictEqual(savedForWorkspace, []);
+	});
+
+	it('shows both global and workspace items when selecting a RegExp', async function() {
+		await vscode.workspace.getConfiguration().update('regExpSaver.savedForWorkspace', [
+			{ label: "Workspace RegExp One", regExp: 'W1' },
+			{ label: "Workspace RegExp Two", regExp: 'W2' },
+		], false);
+		await vscode.workspace.getConfiguration().update('regExpSaver.saved', [
+			{ label: "Global RegExp One", regExp: 'G1' },
+			{ label: "Global RegExp Two", regExp: 'G2' },
+		], true);
+
+		const stub = sinon.stub(vscode.window, 'showQuickPick');
+		stub.onCall(0).resolves(undefined);
+
+		await vscode.commands.executeCommand('regExpSaver.replaceInFile');
+		await delay();
+
+		let quickPickItems = stub.getCall(0).args[0]
+		quickPickItems = quickPickItems.map(
+			(item: { label: string, detail: string }) => ({ label: item.label, detail: item.detail })
+		);
+		assert.deepStrictEqual(quickPickItems, [
+			{ label: "Workspace RegExp One", detail: 'W1' },
+			{ label: "Workspace RegExp Two", detail: 'W2' },
+			{ label: "Global RegExp One", detail: 'G1' },
+			{ label: "Global RegExp Two", detail: 'G2' },
+		])
 	});
 
 	it('can replace in file', async function() {
@@ -48,7 +145,7 @@ describe('Extension Test Suite', function() {
 			regExp: '.*(abc).*',
 			replacePattern: '$1'
 		};
-		await updateSavedItems([savedRegExp]);
+		await vscode.workspace.getConfiguration().update('regExpSaver.saved', [savedRegExp], true);
 		sinon.stub(vscode.window, 'showQuickPick').resolves(savedRegExp);
 		const text = dedent`
 			abc123 def 456 !!!
@@ -74,7 +171,7 @@ describe('Extension Test Suite', function() {
 			regExp: '.*(abc).*',
 			replacePattern: '$1'
 		};
-		await updateSavedItems([savedRegExp]);
+		await vscode.workspace.getConfiguration().update('regExpSaver.saved', [savedRegExp], true);
 		sinon.stub(vscode.window, 'showQuickPick').resolves(savedRegExp);
 		const text = dedent`
 			abc123 def 456 !!!
@@ -102,7 +199,7 @@ describe('Extension Test Suite', function() {
 			label: 'Remove abc',
 			regExp: 'abc'
 		};
-		await updateSavedItems([savedRegExp]);
+		await vscode.workspace.getConfiguration().update('regExpSaver.saved', [savedRegExp], true);
 		sinon.stub(vscode.window, 'showQuickPick').resolves(savedRegExp);
 		const text = dedent`
 			abc123 def 456 !!!
@@ -127,7 +224,7 @@ describe('Extension Test Suite', function() {
 			label: 'Remove abc',
 			regExp: 'abc'
 		};
-		await updateSavedItems([savedRegExp]);
+		await vscode.workspace.getConfiguration().update('regExpSaver.saved', [savedRegExp], true);
 		sinon.stub(vscode.window, 'showQuickPick').resolves(savedRegExp);
 		const text = dedent`
 			abc123 def 456 !!!
@@ -157,7 +254,7 @@ describe('Extension Test Suite', function() {
 			replacePattern: '$1',
 			regExpFlags: 'ig'
 		};
-		await updateSavedItems([savedRegExp]);
+		await vscode.workspace.getConfiguration().update('regExpSaver.saved', [savedRegExp], true);
 		sinon.stub(vscode.window, 'showQuickPick').resolves(savedRegExp);
 		const text = dedent`
 			ABC123 def 456 !!!
@@ -177,31 +274,8 @@ describe('Extension Test Suite', function() {
 		assert.strictEqual(document.getText(), expected);
 	});
 
-	it('can save new item', async function() {
-		const stub = sinon.stub(vscode.window, 'showInputBox');
-		stub.onCall(0).resolves('.*(abc).*');
-		stub.onCall(1).resolves('$1');
-		stub.onCall(2).resolves('Replace line with abc if line contains abc');
-
-		await vscode.commands.executeCommand('regExpSaver.saveNew');
-		await delay();
-
-		const savedItems = getSavedItems();
-		assert.deepEqual(savedItems, [{
-			label: 'Replace line with abc if line contains abc',
-			regExp: '.*(abc).*',
-			replacePattern: '$1'
-		}]);
-	});
+	// TODO: tests for the Find commands, when vscode exposes the API to read from the Find widget
 });
-
-function getSavedItems(): SavedItem[] | undefined {
-	return vscode.workspace.getConfiguration().get('regExpSaver.saved');
-}
-
-async function updateSavedItems(newSavedItems: SavedItem[] | undefined) {
-	return vscode.workspace.getConfiguration().update('regExpSaver.saved', newSavedItems, true);
-}
 
 function resetStubbedMethod(sourceObject: any, methodName: string) {
 	const method = sourceObject[methodName] as any;
