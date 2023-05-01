@@ -1,155 +1,161 @@
 {
-	"name": "regexp-saver",
-	"displayName": "RegExp Saver",
-	"version": "1.1.0",
-	"publisher": "phi",
-	"description": "Save regular expressions to quickly re-use for find and replace",
-	"author": {
-		"name": "Phi Tran"
-	},
-	"icon": "icon.png",
-	"categories": [
-		"Other",
-		"Formatters"
-	],
-	"keywords": [
-		"regexp",
-		"saver",
-		"regular",
-		"expression",
-		"replace"
-	],
-	"activationEvents": [
-		"onCommand:regExpSaver.saveNew",
-		"onCommand:regExpSaver.findInFile",
-		"onCommand:regExpSaver.findInSelection",
-		"onCommand:regExpSaver.replaceInSelection",
-		"onCommand:regExpSaver.replaceInFile"
-	],
-	"engines": {
-		"vscode": "^1.63.0"
-	},
-	"main": "./out/extension.js",
-	"scripts": {
-		"vscode:prepublish": "yarn run compile",
-		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./",
-		"pretest": "yarn run compile",
-		"test": "node ./out/test/runTest.js"
-	},
-	"contributes": {
-		"commands": [
-			{
-				"command": "regExpSaver.saveNew",
-				"title": "RegExp Saver: Save New RegExp"
-			},
-			{
-				"command": "regExpSaver.findInFile",
-				"title": "RegExp Saver: Find in File"
-			},
-			{
-				"command": "regExpSaver.findInSelection",
-				"title": "RegExp Saver: Find in Selection"
-			},
-			{
-				"command": "regExpSaver.replaceInSelection",
-				"title": "RegExp Saver: Replace in Selection"
-			},
-			{
-				"command": "regExpSaver.replaceInFile",
-				"title": "RegExp Saver: Replace in File"
-			}
-		],
-		"menus": {
-			"editor/context": [
-				{
-					"when": "editorHasSelection",
-					"command": "regExpSaver.findInSelection"
-				},
-				{
-					"when": "editorHasSelection",
-					"command": "regExpSaver.replaceInSelection"
-				}
-			]
-		},
-		"configuration": {
-			"title": "RegExp Saver",
-			"properties": {
-				"regExpSaver.saved": {
-					"type": "array",
-					"default": [],
-					"description": "Save your regular expressions to re-use under this array. Each object in this array becomes an item you can pick to apply when using commands such as 'Find in File'",
-					"items": {
-						"type": "object",
-						"properties": {
-							"label": {
-								"type": "string",
-								"description": "A descriptive label for your regular expression. Will be shown in the menu when picking which one to apply to your file or selection."
-							},
-							"regExp": {
-								"type": "string",
-								"description": "The regular expression pattern. IMPORTANT: backslashes need to be doubled up. Example: \\w needs to be \\\\w. Otherwise JSON will think `\\w` is just `w`. (This isn't a problem when using the command 'RegExp Saver: Save new RegExp', just when manually editing the settings JSON)"
-							},
-							"replacePattern": {
-								"type": "string",
-								"description": "The replacement pattern for replacing characters matched by your `regExp` pattern. Each capture group can be referenced like `$1`, `$2`, `$3`, etc. Leave blank to delete everything your `regExp` matched."
-							},
-							"regExpFlags": {
-								"type": "string",
-								"default": "g",
-								"description": "Flags such as 'g', 'i', and 'm'. Unspecified defaults to 'g'."
-							}
-						}
-					}
-				},
-				"regExpSaver.savedForWorkspace": {
-					"type": "array",
-					"default": [],
-					"description": "Save your regular expressions to re-use for a specific workspace. These items won't show when selecting a RegExp in other workspaces.",
-					"items": {
-						"type": "object",
-						"properties": {
-							"label": {
-								"type": "string",
-								"description": "A descriptive label for your regular expression. Will be shown in the menu when picking which one to apply to your file or selection."
-							},
-							"regExp": {
-								"type": "string",
-								"description": "The regular expression pattern. IMPORTANT: backslashes need to be doubled up. Example: \\w needs to be \\\\w. Otherwise JSON will think `\\w` is just `w`. (This isn't a problem when using the command 'RegExp Saver: Save new RegExp', just when manually editing the settings JSON)"
-							},
-							"replacePattern": {
-								"type": "string",
-								"description": "The replacement pattern for replacing characters matched by your `regExp` pattern. Each capture group can be referenced like `$1`, `$2`, `$3`, etc. Leave blank to delete everything your `regExp` matched."
-							},
-							"regExpFlags": {
-								"type": "string",
-								"default": "g",
-								"description": "Flags such as 'g', 'i', and 'm'. Unspecified defaults to 'g'."
-							}
-						}
-					}
-				}
-			}
-		}
-	},
-	"devDependencies": {
-		"@types/glob": "^7.1.1",
-		"@types/mocha": "^5.2.6",
-		"@types/node": "^10.12.21",
-		"@types/sinon": "^7.5.0",
-		"@types/vscode": "^1.63.0",
-		"glob": "^7.1.4",
-		"mocha": "^6.2.3",
-		"sinon": "^7.5.0",
-		"ts-dedent": "^1.1.0",
-		"tslint": "^5.12.1",
-		"typescript": "^4.8.4",
-		"vscode-test": "^1.2.0"
-	},
-	"dependencies": {},
-	"license": "MIT",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/phitranphitranphitran/regexp-saver.git"
-	}
+  "name": "regexp-saver",
+  "displayName": "RegExp Saver",
+  "version": "1.1.0",
+  "publisher": "phi",
+  "description": "Save regular expressions to quickly re-use for find and replace",
+  "author": {
+    "name": "Phi Tran"
+  },
+  "icon": "icon.png",
+  "categories": [
+    "Other",
+    "Formatters"
+  ],
+  "keywords": [
+    "regexp",
+    "saver",
+    "regular",
+    "expression",
+    "replace"
+  ],
+  "activationEvents": [
+    "onCommand:regExpSaver.saveNew",
+    "onCommand:regExpSaver.findInFile",
+    "onCommand:regExpSaver.findInSelection",
+    "onCommand:regExpSaver.replaceInSelection",
+    "onCommand:regExpSaver.replaceInFile"
+  ],
+  "engines": {
+    "vscode": "^1.63.0"
+  },
+  "main": "./out/extension.js",
+  "scripts": {
+    "vscode:prepublish": "yarn run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "yarn run compile",
+    "test": "node ./out/test/runTest.js",
+    "prepare": "husky install"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "regExpSaver.saveNew",
+        "title": "RegExp Saver: Save New RegExp"
+      },
+      {
+        "command": "regExpSaver.findInFile",
+        "title": "RegExp Saver: Find in File"
+      },
+      {
+        "command": "regExpSaver.findInSelection",
+        "title": "RegExp Saver: Find in Selection"
+      },
+      {
+        "command": "regExpSaver.replaceInSelection",
+        "title": "RegExp Saver: Replace in Selection"
+      },
+      {
+        "command": "regExpSaver.replaceInFile",
+        "title": "RegExp Saver: Replace in File"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "when": "editorHasSelection",
+          "command": "regExpSaver.findInSelection"
+        },
+        {
+          "when": "editorHasSelection",
+          "command": "regExpSaver.replaceInSelection"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "RegExp Saver",
+      "properties": {
+        "regExpSaver.saved": {
+          "type": "array",
+          "default": [],
+          "description": "Save your regular expressions to re-use under this array. Each object in this array becomes an item you can pick to apply when using commands such as 'Find in File'",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "description": "A descriptive label for your regular expression. Will be shown in the menu when picking which one to apply to your file or selection."
+              },
+              "regExp": {
+                "type": "string",
+                "description": "The regular expression pattern. IMPORTANT: backslashes need to be doubled up. Example: \\w needs to be \\\\w. Otherwise JSON will think `\\w` is just `w`. (This isn't a problem when using the command 'RegExp Saver: Save new RegExp', just when manually editing the settings JSON)"
+              },
+              "replacePattern": {
+                "type": "string",
+                "description": "The replacement pattern for replacing characters matched by your `regExp` pattern. Each capture group can be referenced like `$1`, `$2`, `$3`, etc. Leave blank to delete everything your `regExp` matched."
+              },
+              "regExpFlags": {
+                "type": "string",
+                "default": "g",
+                "description": "Flags such as 'g', 'i', and 'm'. Unspecified defaults to 'g'."
+              }
+            }
+          }
+        },
+        "regExpSaver.savedForWorkspace": {
+          "type": "array",
+          "default": [],
+          "description": "Save your regular expressions to re-use for a specific workspace. These items won't show when selecting a RegExp in other workspaces.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "description": "A descriptive label for your regular expression. Will be shown in the menu when picking which one to apply to your file or selection."
+              },
+              "regExp": {
+                "type": "string",
+                "description": "The regular expression pattern. IMPORTANT: backslashes need to be doubled up. Example: \\w needs to be \\\\w. Otherwise JSON will think `\\w` is just `w`. (This isn't a problem when using the command 'RegExp Saver: Save new RegExp', just when manually editing the settings JSON)"
+              },
+              "replacePattern": {
+                "type": "string",
+                "description": "The replacement pattern for replacing characters matched by your `regExp` pattern. Each capture group can be referenced like `$1`, `$2`, `$3`, etc. Leave blank to delete everything your `regExp` matched."
+              },
+              "regExpFlags": {
+                "type": "string",
+                "default": "g",
+                "description": "Flags such as 'g', 'i', and 'm'. Unspecified defaults to 'g'."
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "devDependencies": {
+    "@types/glob": "^7.1.1",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^10.12.21",
+    "@types/sinon": "^7.5.0",
+    "@types/vscode": "^1.63.0",
+    "glob": "^7.1.4",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.2",
+    "mocha": "^6.2.3",
+    "prettier": "^2.8.8",
+    "sinon": "^7.5.0",
+    "ts-dedent": "^1.1.0",
+    "tslint": "^5.12.1",
+    "typescript": "^4.8.4",
+    "vscode-test": "^1.2.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/phitranphitranphitran/regexp-saver.git"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
+  }
 }

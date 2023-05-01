@@ -52,16 +52,19 @@ A string of flags such as "g", "i", and "m". Unspecified defaults to "g".
 
 ```json
 {
-    "regExpSaver.saved": [{
-        "label": "Replace all Robs with Robert",
-        "regExp": "rob",
-        "replacePattern": "Robert",
-        "regExpFlags": "gi"
-    }, {
-        "label": "Format phone numbers",
-        "regExp": "(\\d{3})(\\d{3})(\\d{4})",
-        "replacePattern": "($1) $2-$3"
-    }]
+  "regExpSaver.saved": [
+    {
+      "label": "Replace all Robs with Robert",
+      "regExp": "rob",
+      "replacePattern": "Robert",
+      "regExpFlags": "gi"
+    },
+    {
+      "label": "Format phone numbers",
+      "regExp": "(\\d{3})(\\d{3})(\\d{4})",
+      "replacePattern": "($1) $2-$3"
+    }
+  ]
 }
 ```
 
